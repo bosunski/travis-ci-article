@@ -1,0 +1,29 @@
+language: php
+php:
+  - 7.1
+services:
+  # This part helps us include mysql as a service we need.
+  - mysql
+before_script:
+  - mysql -e 'CREATE DATABASE test_db;'
+  - composer install --no-interaction
+  - cp .env.example .env
+  - php artisan key:generate
+  - php artisan migrate
+addons:
+  ssh_known_hosts:
+    - 123.456.678.910
+branches:
+  only:
+    - master
+script:
+  - vendor/bin/phpunit
+after_script:
+  # Travis will attempt to connect to the server over ssh and run `cd /var/www/html` and then `git pull origin master` to update the content on the server
+  - ssh -i ./deploy_key root@157.230.183.190 cd /var/www/travis-ci-article && git pull origin master
+before_install:
+  - openssl aes-256-cbc -K $encrypted_240bf24cdcde_key -iv $encrypted_240bf24cdcde_iv -in deploy_key.enc -out ./deploy_key -d
+  - eval "$(ssh-agent -s)"
+  - chmod 600 ./deploy_key
+  - echo -e "Host 157.230.183.190\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+  - ssh-add ./deploy_key
