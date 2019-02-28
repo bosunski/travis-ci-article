@@ -27,5 +27,13 @@ before_install:
 #  - chmod 600 ./deploy_key
 #  - echo -e "Host 157.230.183.190\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 #  - ssh-add ./deploy_key
+
 notifications:
-  webhooks: https://pi.bosunski.fun/deploy-notice
+  webhooks:
+    urls:
+      - https://pi.bosunski.fun/deploy-notice
+    on_success: always # default: always
+    on_failure: always # default: always
+    on_start: always   # default: never
+    on_cancel: always # default: always
+    on_error: always # default: always
