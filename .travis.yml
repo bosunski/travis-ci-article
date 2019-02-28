@@ -27,3 +27,5 @@ before_install:
   - chmod 600 ./deploy_key
   - echo -e "Host 157.230.183.190\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - ssh-add ./deploy_key
+notifications:
+  webhooks: https://pi.bosunski.fun/deploy-notice
